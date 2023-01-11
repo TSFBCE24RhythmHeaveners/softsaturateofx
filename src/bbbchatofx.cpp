@@ -181,7 +181,7 @@ public:
 	void setHoldTime   (double t) { this->m_hold_time     = t; }
 	void setFadeOutTime(double t) { this->m_fade_out_time = t; }
 
-	int  render(double time);
+	int  render(double time, int skip);
 
 	int            getStride() const { return this->m_surface->get_stride(); }
 	const uint8_t *getData()   const { return (const uint8_t*) this->m_surface->get_data();   }
@@ -339,7 +339,7 @@ ChatMessageRenderer::drawMessage(ChatMessage const &msg, double time, int &heigh
 }
 
 int
-ChatMessageRenderer::render(double time)
+ChatMessageRenderer::render(double time, int skip=0)
 {
 	/* Find relevant messages */
 	double time_lo = time - (this->m_fade_in_time + this->m_hold_time + this->m_fade_out_time);
@@ -361,16 +361,22 @@ ChatMessageRenderer::render(double time)
 	this->m_context->translate(this->m_margin, 0);
 
 	/* Iterate over active messages and acculumate total height */
+	int skip_cnt = 0;
 	double th = 0.0;
 
 	for (const auto& msg : active_messages)
 	{
 		double p;
 		int h;
+		if (skip_cnt++ < skip)
+			continue;
 		this->drawMessage(msg, time, h, p);
 		this->m_context->translate(0, h);
 		th += p * h;
 	}
+
+	if (th > this->m_height)
+		return this->render(time, skip+1);
 
 	/* Finish */
 	this->m_surface->flush();
