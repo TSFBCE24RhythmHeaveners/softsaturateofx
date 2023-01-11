@@ -141,6 +141,9 @@ protected:
 	int m_height;
 	int m_margin;
 
+	std::string m_font_family;
+	double m_font_size;
+
 	double m_color_bg[4];
 	double m_color_user[3];
 	double m_color_text[3];
@@ -164,6 +167,9 @@ public:
 	void setHeight(int height) { if (this->m_height != height) { this->m_height = height; this->drawRelease(); } }
 	void setMargin(int margin) { if (this->m_margin != margin) { this->m_margin = margin; this->drawRelease(); } }
 
+	void setFontFamily(std::string font_family) { if (this->m_font_family != font_family) { this->m_font_family = font_family; this->drawRelease(); } }
+	void setFontSize(double font_size)          { if (this->m_font_size   != font_size)   { this->m_font_size   = font_size;   this->drawRelease(); } }
+
 	int getWidth()  const { return this->m_width;  }
 	int getHeight() const { return this->m_height; }
 
@@ -184,6 +190,7 @@ public:
 ChatMessageRenderer::ChatMessageRenderer(std::vector<ChatMessage> messages = {})
 	: m_messages(messages),
 	m_width{640}, m_height{360}, m_margin{10},
+	m_font_family("Sans"), m_font_size(16.0),
 	m_color_bg{0.5, 0.5, 0.5, 0.5}, m_color_user{0.628, 0.0, 0.0}, m_color_text{0.0, 0.0, 0.0},
 	m_fade_in_time{1}, m_hold_time{15.0}, m_fade_out_time{1}
 {
@@ -222,6 +229,8 @@ ChatMessageRenderer::drawInit()
 		this->m_layout->set_height ((this->m_height - 2 * this->m_margin) * PANGO_SCALE);
 
 		Pango::FontDescription font_description("Sans 12");
+		font_description.set_family(this->m_font_family.c_str());
+		font_description.set_size((int)round(this->m_font_size * PANGO_SCALE));
 		this->m_layout->set_font_description(font_description);
 
 		/* Set the alignment and wrapping */
@@ -445,11 +454,14 @@ doReconfigure(OfxImageEffectHandle effect)
 	priv->cmr.setWidth ((int)round(data[0]));
 	priv->cmr.setHeight((int)round(data[1]));
 
-	//gParamHost->paramGetValue(priv->fontFamilyParam,  );
-	// FIXME
+	char *font_family;
+	gParamHost->paramGetValue(priv->fontFamilyParam,  &font_family);
+
+	if (font_family && font_family[0])
+		priv->cmr.setFontFamily(font_family);
 
 	gParamHost->paramGetValue(priv->fontSizeParam,    &data[0]);
-	// FIXME
+	priv->cmr.setFontSize(data[0]);
 
 	gParamHost->paramGetValue(priv->bgColorParam,     &data[0], &data[1], &data[2], &data[3]);
 	priv->cmr.setColorBackground(data);
@@ -856,6 +868,7 @@ effectDescribeInContext(
 	gPropHost->propSetString(props, kOfxParamPropParent, 0, "fontGrp");
 	gPropHost->propSetInt   (props, kOfxParamPropAnimates, 0, 0);
 	gPropHost->propSetString(props, kOfxParamPropStringMode, 0, kOfxParamStringIsSingleLine);
+	gPropHost->propSetString(props, kOfxParamPropDefault, 0, "Sans");
 
 		/* Font: size */
 	gParamHost->paramDefine(paramSet, kOfxParamTypeDouble, "fontSize", &props);
