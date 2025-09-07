@@ -30,11 +30,11 @@ The main features are
 #include "ofxsProcessing.H"
 #include "ofxsMatrix2D.h"
 
-#define kPluginName "WeirdDuology Saturation"
-#define kPluginGrouping "WeirdDuology OFX"
+#define kPluginName "SalkocsisFX Saturation"
+#define kPluginGrouping "SalkocsisFX"
 #define kPluginDescription "Saturates old film."
 
-#define kPluginIdentifier "com.weirdduology.saturation"
+#define kPluginIdentifier "com.salkocsisfx.saturation"
 #define kPluginVersionMajor 1
 #define kPluginVersionMinor 0
 
