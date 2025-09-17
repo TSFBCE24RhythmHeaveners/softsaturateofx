@@ -17,7 +17,7 @@ The main features are
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
 #include <windows.h>
 #else
-#  error WeirdDuology OFX is for Windows only, bro.
+#  error SoftSaturateOFX is for Windows only, bro.
 #endif
 
 #include <stdio.h>
@@ -30,11 +30,11 @@ The main features are
 #include "ofxsProcessing.H"
 #include "ofxsMatrix2D.h"
 
-#define kPluginName "SalkocsisFX Saturation"
-#define kPluginGrouping "SalkocsisFX"
+#define kPluginName "SoftSaturate"
+#define kPluginGrouping "TSFBCE24RhythmHeaveners"
 #define kPluginDescription "Saturates old film."
 
-#define kPluginIdentifier "com.salkocsisfx.saturation"
+#define kPluginIdentifier "com.softsat.ofx"
 #define kPluginVersionMajor 1
 #define kPluginVersionMinor 0
 
